@@ -31,7 +31,6 @@ void KalmanFilter::Predict() {
    */
 
    x_ = F_*x_;
-   // MatrixXd Ft = F_.transpose();
    P_ = F_*P_*F_.transpose() + Q_;
    return;
 }
@@ -44,14 +43,9 @@ void KalmanFilter::Update(const VectorXd &z) {
     VectorXd y = VectorXd(2);
     MatrixXd S = MatrixXd(2,2);
     MatrixXd K = MatrixXd(4,2);
-    // MatrixXd Ht = MatrixXd(4,2);
-    // MatrixXd Sinv = MatrixXd(2,2);
 
-    // Ht = H_.transpose();
     y = z - H_*x_;
     S = H_*P_*H_.transpose() + R_;
-
-    // Sinv=S.inverse();
 
     K = P_*H_.transpose()*S.inverse();
     x_ = x_ + (K*y);
@@ -89,11 +83,6 @@ void KalmanFilter::UpdateEKF(const VectorXd& z) {
    h << denom, phi,
         (px*vx + py*vy)/denom;
 
-   // Hj - Jacobian of h
-   // Tools t;
-   // MatrixXd Hj = MatrixXd(3,4);
-   // Hj = t.CalculateJacobian(x_);
-
    MatrixXd I = MatrixXd(4,4);
    I << 1,0,0,0,
         0,1,0,0,
@@ -103,12 +92,6 @@ void KalmanFilter::UpdateEKF(const VectorXd& z) {
    VectorXd y = VectorXd(3);
    MatrixXd S = MatrixXd(3,3);
    MatrixXd K = MatrixXd(4,3);
-   // MatrixXd Sinv = MatrixXd(3,3);
-   // MatrixXd Ht = MatrixXd(4,3);
-   // Ht = H_.transpose();
-
-   while(h(1)>M_PI){ h(1) -= 2.*M_PI;}
-   while(h(1)<-M_PI){ h(1) += 2.*M_PI;}
 
    y = z - h;
 
@@ -116,7 +99,6 @@ void KalmanFilter::UpdateEKF(const VectorXd& z) {
    while(y(1)<-M_PI){ y(1) += 2.*M_PI;}
 
    S = H_*P_*H_.transpose() + R_;
-   // Sinv = S.inverse();
 
    K = P_*H_.transpose()*S.inverse();
 

@@ -7,6 +7,33 @@ Self-Driving Car Engineer Nanodegree Program
 
 **Extended Kalman filter:** Kalman filter works on a linear model. The physics model used in the prediction step is a linear model, however, the radar measurements returned by the sensor in polar coordinates need a nonlinear model to convert to cartesian coordinates. To continue using the Kalman Filter method, the polar to cartesian conversion is linearized (approximately) using a Jacobian. Due to this generalization, the current implementation is called an Extended Kalman Filter.
 
+Equations for prediction step
+
+    X = F*X
+    P = F*P*F’ + Q
+
+X = mean state vector 
+F = State transition matrix
+P = variance in the state estimation
+Q = Process noise
+Equations for measurement update step
+
+    y = z - H*X for Lidar
+    y = z - h(X) for Radar
+    S = H*P*H’ + R
+    K = P*H’*S^-1
+    
+    X = X + K*y
+    P = (I - K*H)*P
+    
+z = sensor measurement
+H = Measurement function - converts state to measurement space
+R = measurement noise
+K = Kalman gain
+I = Identity matrix
+
+For Radar, H=Jacobian(h(X))
+
 **Performance measure:** The performance of the Extended Kalman Filter is verified by a RMSE (Root Mean Square Error) measure between the model outcomes and the ground truth values provided.
 
 **Environment setup and running the code is explained below** 
